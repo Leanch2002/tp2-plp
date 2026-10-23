@@ -13,7 +13,10 @@ esMatriz(_) :- completar("Ejercicio 1").
 
 % tamaño(+Matriz, -Filas, -Columnas)
 % Precondición: esMatriz(Matriz)
-tamaño(_, _, _) :- completar("Ejercicio 2").
+tamaño([], 0, 0).
+tamaño([X | Xs], Filas, Columnas) :-
+  length([X | Xs], Filas),
+  length(X, Columnas).
 
 % ----------------
 % Ejercicio 3
