@@ -5,7 +5,15 @@
 % ----------------
 
 % esMatriz(+ListaDeListas)
-esMatriz(_) :- completar("Ejercicio 1").
+esMatriz([]).
+esMatriz([X | Xs]) :- 
+  length(X , Longitud), 
+  todosMismaLongitud(Xs, Longitud).
+
+todosMismaLongitud([], _).
+todosMismaLongitud([X | Xs], Longitud) :- 
+  length(X, Longitud), 
+  todosMismaLongitud(Xs, Longitud).
 
 % ----------------
 % Ejercicio 2
