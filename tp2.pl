@@ -32,7 +32,10 @@ tamaño([X | Xs], Filas, Columnas) :-
 
 % coordenadaEnRango(+Matriz, +Coordenada)
 % Precondición: esMatriz(Matriz)
-coordenadaEnRango(_, _) :- completar("Ejercicio 3").
+coordenadaEnRango(Matriz, (X, Y)) :- 
+  tamaño(Matriz, Fila, Columna),
+  X =< Fila, Y =< Columna,
+  X >= 1, Y >= 1.
 
 % ----------------
 % Observadores de tablero.
