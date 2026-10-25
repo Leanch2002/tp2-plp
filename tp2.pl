@@ -86,8 +86,6 @@ tableroConPosiciónLiberada(T, (X, Y), TL):-
   modificar(Y, Actual, libre, Nueva),
   modificar(X, T, Nueva, TL).
 
-
-
 % ----------------
 % Ejercicio 4.b)
 % ----------------
@@ -95,7 +93,8 @@ tableroConPosiciónLiberada(T, (X, Y), TL):-
 % tableroConPosicionesLiberadas(+Tablero, +Posiciones, -TableroLiberado)
 % Precondición: esMatriz(Tablero).
 % Precondición: para cada Coordenada en Posiciones: coordenadaEnRango(Tablero, Coordenada), not(libre(Tablero, Coordenada)).
-tableroConPosicionesLiberadas(_, _, _) :- completar("Ejercicio 4.b").
+tableroConPosicionesLiberadas(T, [], T).
+tableroConPosicionesLiberadas(T1, [C|CS], T3) :- tableroConPosiciónLiberada(T1, C, T2), tableroConPosicionesLiberadas(T2, CS, T3).
 
 % ----------------
 % Operaciones sobre coordenadas.
