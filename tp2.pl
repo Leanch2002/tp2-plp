@@ -1,4 +1,5 @@
 :- use_module(popong).
+:- encoding(utf8).
 
 % ----------------
 % Ejercicio 1
@@ -73,7 +74,19 @@ color(T, Color, Coordenada) :-
 
 % tableroConPosiciónLiberada(+Tablero, +Coordenada, -TableroLiberado)
 % Precondición: esMatriz(Tablero), coordenadaEnRango(Tablero, Coordenada), not(libre(Tablero, Coordenada)).
-tableroConPosiciónLiberada(_, _, _) :- completar("Ejercicio 4.a").
+
+modificar(I, L, Valor, L2) :-
+  J is I - 1,
+  append(P,_, L), length(P, J),
+  append(P, [_ | S], L),
+  append(P, [Valor | S], L2).
+
+tableroConPosiciónLiberada(T, (X, Y), TL):-
+  nth1(X, T, Actual), 
+  modificar(Y, Actual, libre, Nueva),
+  modificar(X, T, Nueva, TL).
+
+
 
 % ----------------
 % Ejercicio 4.b)
