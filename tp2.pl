@@ -73,7 +73,16 @@ color(T, Color, Coordenada) :-
 
 % tableroConPosiciónLiberada(+Tablero, +Coordenada, -TableroLiberado)
 % Precondición: esMatriz(Tablero), coordenadaEnRango(Tablero, Coordenada), not(libre(Tablero, Coordenada)).
-tableroConPosiciónLiberada(_, _, _) :- completar("Ejercicio 4.a").
+tableroConPosiciónLiberada(T1, (X,Y), T2) :- 
+  tamaño(T1,F,Col), tamaño(T2,F,Col), 
+  esMatriz(T2), libre(T2,(X,Y)),
+  flatten(T1,T1F), flatten(T2, T2F),
+  C is X*Y, igualesMenos(T1F,T2F,C).
+
+% igualesMenos(+T1,+T2,+C)
+igualesMenos([],[],_).
+igualesMenos([X|XS],[Y|YS],1) :- igualesMenos(XS,YS,0).
+igualesMenos([X|XS],[Y|YS],C) :- X = Y, C2 is C-1, igualesMenos(XS,YS,C2).
 
 % ----------------
 % Ejercicio 4.b)
