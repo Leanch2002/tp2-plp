@@ -72,18 +72,16 @@ color(T, Color, Coordenada) :-
 
 % tableroConPosiciónLiberada(+Tablero, +Coordenada, -TableroLiberado)
 % Precondición: esMatriz(Tablero), coordenadaEnRango(Tablero, Coordenada), not(libre(Tablero, Coordenada)).
+tableroConPosiciónLiberada(Tablero, (X, Y), TableroLib):-
+  nth1(X, Tablero, FilaActual), 
+  modificar(FilaActual, Y, libre, FilaNueva),
+  modificar(Tablero, X, FilaNueva, TableroLib).
 
-tableroConPosiciónLiberada(T, (X, Y), TL):-
-  nth1(X, T, Actual), 
-  modificar(Y, Actual, libre, Nueva),
-  modificar(X, T, Nueva, TL).
-
-% modificar(+I, +L, +Valor, -L2)
-modificar(I, L, Valor, L2) :-
-  J is I - 1,
-  append(P,_, L), length(P, J),
-  append(P, [_ | S], L),
-  append(P, [Valor | S], L2).
+% modificar(+L, +Indice, +Valor, -Lm)
+modificar([_ | Ls], 1, Valor, [Valor | Ls]).
+modificar([L | Ls], Indice, Valor, [L | Lm]) :-
+  J is Indice - 1,
+  modificar(Ls, J, Valor, Lm).
 
 % ----------------
 % Ejercicio 4.b)
