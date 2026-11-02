@@ -5,10 +5,8 @@
 % ----------------
 
 % esMatriz(+ListaDeListas)
-esMatriz([]).
-esMatriz([X | Xs]) :- 
-  length(X , Longitud), 
-  todosMismaLongitud(Xs, Longitud).
+esMatriz(Xs) :- 
+  todosMismaLongitud(Xs, _).
 
 todosMismaLongitud([], _).
 todosMismaLongitud([X | Xs], Longitud) :- 
