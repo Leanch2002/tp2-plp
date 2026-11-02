@@ -268,7 +268,11 @@ jugadasNaive(T, [C|CS]) :- jugadaPosible(T, C), jugarPosición(T, C, T2), jugada
 % victoriaConJugadas(+Tablero, +Jugadas).
 % Precondición: esMatriz(Tablero).
 % Precondición: para cada Coordenada en Jugadas: coordenadaEnRango(Tablero, Coordenada).
-victoriaConJugadas(_, _) :- completar("Ejercicio 7.a").
+victoriaConJugadas(Tablero, Jugadas) :- 
+  jugarPosiciones(Tablero, Jugadas, Final),
+  not(hayColor(Final)).
+
+hayColor(Tablero) :- coordenada(Tablero, C), color(Tablero, _, C).
 
 % ----------------
 % Ejercicio 7.b)
@@ -276,7 +280,7 @@ victoriaConJugadas(_, _) :- completar("Ejercicio 7.a").
 
 % juegoNaiveVictorioso(+Tablero, -Jugadas)
 % Precondición: esMatriz(Tablero).
-juegoNaiveVictorioso(_, _) :- completar("Ejercicio 7.b").
+juegoNaiveVictorioso(T, J) :- jugadasNaive(T, J), victoriaConJugadas(T,J).
 
 % ----------------
 % Ejercicio 7.c)
@@ -284,7 +288,13 @@ juegoNaiveVictorioso(_, _) :- completar("Ejercicio 7.b").
 
 % mejorJuegoNaive(+Tablero, -Jugadas)
 % Precondición: esMatriz(Tablero).
-mejorJuegoNaive(_, _) :- completar("Ejercicio 7.c").
+mejorJuegoNaive(T, J) :- mejoresJuegosNaive(T, J, V).
+
+mejoresJuegosNaive(_, _ , []).
+mejoresJuegosNaive(T, J, [J|V]) :- 
+  juegoNaiveVictorioso(T, J),
+  not(member(J,L)), length(J, N),
+  not(member(G, L), length(G,M), M > N).
 
 % ----------------
 % Ejercicio 8 - OPCIONAL
