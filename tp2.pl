@@ -75,18 +75,17 @@ color(T, Color, Coordenada) :-
 % tableroConPosiciónLiberada(+Tablero, +Coordenada, -TableroLiberado)
 % Precondición: esMatriz(Tablero), coordenadaEnRango(Tablero, Coordenada), not(libre(Tablero, Coordenada)).
 
-modificar(I, L, Valor, L2) :-
-  J is I - 1,
-  append(P,_, L), length(P, J),
-  append(P, [_ | S], L),
-  append(P, [Valor | S], L2).
-
 tableroConPosiciónLiberada(T, (X, Y), TL):-
   nth1(X, T, Actual), 
   modificar(Y, Actual, libre, Nueva),
   modificar(X, T, Nueva, TL).
 
-
+% modificar(+I, +L, +Valor, -L2)
+modificar(I, L, Valor, L2) :-
+  J is I - 1,
+  append(P,_, L), length(P, J),
+  append(P, [_ | S], L),
+  append(P, [Valor | S], L2).
 
 % ----------------
 % Ejercicio 4.b)
@@ -95,7 +94,8 @@ tableroConPosiciónLiberada(T, (X, Y), TL):-
 % tableroConPosicionesLiberadas(+Tablero, +Posiciones, -TableroLiberado)
 % Precondición: esMatriz(Tablero).
 % Precondición: para cada Coordenada en Posiciones: coordenadaEnRango(Tablero, Coordenada), not(libre(Tablero, Coordenada)).
-tableroConPosicionesLiberadas(_, _, _) :- completar("Ejercicio 4.b").
+tableroConPosicionesLiberadas(T, [], T).
+tableroConPosicionesLiberadas(T1, [C|CS], T3) :- tableroConPosiciónLiberada(T1, C, T2), tableroConPosicionesLiberadas(T2, CS, T3).
 
 % ----------------
 % Operaciones sobre coordenadas.
@@ -232,7 +232,8 @@ jugadaPosible(T, (I, J)) :-
 
 % jugarPosición(+TableroInicial, +Coordenada, -TableroResultante)
 % Precondición: esMatriz(TableroInicial), coordenadaEnRango(TableroInicial, Coordenada), libre(TableroInicial, Coordenada).
-jugarPosición(_, _, _) :- completar("Ejercicio 5.a").
+jugarPosición(T, C, T) :- not(jugadaPosible(T, C)).
+jugarPosición(T, C, T2) :- jugadaPosible(T, C), coloresPredominantes(T, C, _, CS), tableroConPosicionesLiberadas(T, CS, T2).
 
 % ----------------
 % Ejercicio 5.b)
@@ -241,7 +242,8 @@ jugarPosición(_, _, _) :- completar("Ejercicio 5.a").
 % jugarPosiciones(+TableroInicial, +Jugadas, -TableroResultante)
 % Precondición: esMatriz(TableroInicial).
 % Precondición: para cada Coordenada en Jugadas: coordenadaEnRango(TableroInicial, Coordenada).
-jugarPosiciones(_, _, _) :- completar("Ejercicio 5.b").
+jugarPosiciones(T, [], T).
+jugarPosiciones(T1, [C|CS], T3) :- jugarPosición(T1, C, T2), jugarPosiciones(T2, CS, T3).
 
 % jugarNaive(+TableroInicial, -TableroFinal)
 % Precondición: esMatriz(TableroInicial).
@@ -258,7 +260,11 @@ jugarNaive(T, TF) :-
 
 % jugadasNaive(+Tablero, -Jugadas)
 % Precondición: esMatriz(Tablero).
-jugadasNaive(_, _) :- completar("Ejercicio 6.b").
+jugadasNaive(T, []) :- not(jugadaPosible(T, _)).
+jugadasNaive(T, [C|CS]) :- findall(X, jugadaPosible(T, X), JP), primero(JP, C), jugarPosición(T, C, T2), jugadasNaive(T2, CS).
+
+%primero(+CS, -C)
+primero(CS, C) :- reverse(CS, SC), last(SC, C).
 
 % ----------------
 % Ejercicio 7.a)
