@@ -252,7 +252,7 @@ jugarNaive(T, T) :-
 jugarNaive(T, TF) :-
   jugadaPosible(T, J),
   jugarPosición(T, J, TI),
-  jugarNaive(TI, TF).
+  jugarNaive(TI, TF),!.
 
 % ----------------
 % Ejercicio 6)
