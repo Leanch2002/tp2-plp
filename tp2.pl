@@ -260,7 +260,11 @@ jugarNaive(T, TF) :-
 
 % jugadasNaive(+Tablero, -Jugadas)
 % Precondición: esMatriz(Tablero).
-jugadasNaive(_, _) :- completar("Ejercicio 6.b").
+jugadasNaive(T, []) :- not(jugadaPosible(T, _)).
+jugadasNaive(T, [C|CS]) :- findall(X, jugadaPosible(T, X), JP), primero(JP, C), jugarPosición(T, C, T2), jugadasNaive(T2, CS).
+
+%primero(+CS, -C)
+primero(CS, C) :- reverse(CS, SC), last(SC, C).
 
 % ----------------
 % Ejercicio 7.a)
