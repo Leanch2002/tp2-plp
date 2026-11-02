@@ -95,7 +95,9 @@ modificar(I, L, Valor, L2) :-
 % Precondición: esMatriz(Tablero).
 % Precondición: para cada Coordenada en Posiciones: coordenadaEnRango(Tablero, Coordenada), not(libre(Tablero, Coordenada)).
 tableroConPosicionesLiberadas(T, [], T).
-tableroConPosicionesLiberadas(T1, [C|CS], T3) :- tableroConPosiciónLiberada(T1, C, T2), tableroConPosicionesLiberadas(T2, CS, T3).
+tableroConPosicionesLiberadas(T1, [C | Cs], T3) :- 
+  tableroConPosiciónLiberada(T1, C, T2), 
+  tableroConPosicionesLiberadas(T2, Cs, T3).
 
 % ----------------
 % Operaciones sobre coordenadas.
