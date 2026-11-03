@@ -230,7 +230,6 @@ jugadaPosible(T, (I, J)) :-
 
 % jugarPosición(+TableroInicial, +Coordenada, -TableroResultante)
 % Precondición: esMatriz(TableroInicial), coordenadaEnRango(TableroInicial, Coordenada), libre(TableroInicial, Coordenada).
-jugarPosición(T, C, T) :- not(jugadaPosible(T, C)).
 jugarPosición(T, C, T2) :- jugadaPosible(T, C), coloresPredominantes(T, C, _, CS), tableroConPosicionesLiberadas(T, CS, T2).
 
 % ----------------
