@@ -6,10 +6,8 @@
 % ----------------
 
 % esMatriz(+ListaDeListas)
-esMatriz([]).
-esMatriz([X | Xs]) :- 
-  length(X , Longitud), 
-  todosMismaLongitud(Xs, Longitud).
+esMatriz(Xs) :- 
+  todosMismaLongitud(Xs, _).
 
 todosMismaLongitud([], _).
 todosMismaLongitud([X | Xs], Longitud) :- 
@@ -74,18 +72,16 @@ color(T, Color, Coordenada) :-
 
 % tableroConPosiciónLiberada(+Tablero, +Coordenada, -TableroLiberado)
 % Precondición: esMatriz(Tablero), coordenadaEnRango(Tablero, Coordenada), not(libre(Tablero, Coordenada)).
+tableroConPosiciónLiberada(Tablero, (X, Y), TableroLib):-
+  nth1(X, Tablero, FilaActual), 
+  modificar(FilaActual, Y, libre, FilaNueva),
+  modificar(Tablero, X, FilaNueva, TableroLib).
 
-tableroConPosiciónLiberada(T, (X, Y), TL):-
-  nth1(X, T, Actual), 
-  modificar(Y, Actual, libre, Nueva),
-  modificar(X, T, Nueva, TL).
-
-% modificar(+I, +L, +Valor, -L2)
-modificar(I, L, Valor, L2) :-
-  J is I - 1,
-  append(P,_, L), length(P, J),
-  append(P, [_ | S], L),
-  append(P, [Valor | S], L2).
+% modificar(+L, +Indice, +Valor, -Lm)
+modificar([_ | Ls], 1, Valor, [Valor | Ls]).
+modificar([L | Ls], Indice, Valor, [L | Lm]) :-
+  J is Indice - 1,
+  modificar(Ls, J, Valor, Lm).
 
 % ----------------
 % Ejercicio 4.b)
@@ -95,7 +91,9 @@ modificar(I, L, Valor, L2) :-
 % Precondición: esMatriz(Tablero).
 % Precondición: para cada Coordenada en Posiciones: coordenadaEnRango(Tablero, Coordenada), not(libre(Tablero, Coordenada)).
 tableroConPosicionesLiberadas(T, [], T).
-tableroConPosicionesLiberadas(T1, [C|CS], T3) :- tableroConPosiciónLiberada(T1, C, T2), tableroConPosicionesLiberadas(T2, CS, T3).
+tableroConPosicionesLiberadas(T1, [C | Cs], T3) :- 
+  tableroConPosiciónLiberada(T1, C, T2), 
+  tableroConPosicionesLiberadas(T2, Cs, T3).
 
 % ----------------
 % Operaciones sobre coordenadas.
