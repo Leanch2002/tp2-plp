@@ -6,13 +6,13 @@
 % ----------------
 
 % esMatriz(+ListaDeListas)
+esMatriz([]).
 esMatriz(Xs) :- 
-  todosMismaLongitud(Xs, _).
+  todosMismaLongitud(Xs).
 
-todosMismaLongitud([], _).
-todosMismaLongitud([X | Xs], Longitud) :- 
-  length(X, Longitud), 
-  todosMismaLongitud(Xs, Longitud).
+% todosMismaLongitud(+Xs)
+todosMismaLongitud([_|[]]).
+todosMismaLongitud([X1|[X2|XS]]) :- length(X1, L), length(X2, L), todosMismaLongitud([X2|XS]).
 
 % ----------------
 % Ejercicio 2
@@ -230,7 +230,6 @@ jugadaPosible(T, (I, J)) :-
 
 % jugarPosición(+TableroInicial, +Coordenada, -TableroResultante)
 % Precondición: esMatriz(TableroInicial), coordenadaEnRango(TableroInicial, Coordenada), libre(TableroInicial, Coordenada).
-jugarPosición(T, C, T) :- not(jugadaPosible(T, C)).
 jugarPosición(T, C, T2) :- jugadaPosible(T, C), coloresPredominantes(T, C, _, CS), tableroConPosicionesLiberadas(T, CS, T2).
 
 % ----------------
