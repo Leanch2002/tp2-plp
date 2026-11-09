@@ -258,7 +258,7 @@ jugarNaive(T, TF) :-
 % jugadasNaive(+Tablero, -Jugadas)
 % Precondición: esMatriz(Tablero).
 jugadasNaive(T, []) :- not(jugadaPosible(T, _)).
-jugadasNaive(T, [C|CS]) :- jugadaPosible(T, C), jugarPosición(T, C, T2), jugadasNaive(T2, CS), !.
+jugadasNaive(T, [C|CS]) :- jugadaPosible(T, C), jugarPosición(T, C, T2), jugadasNaive(T2, CS).
 
 % ----------------
 % Ejercicio 7.a)
