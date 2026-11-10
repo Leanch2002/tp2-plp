@@ -1,4 +1,5 @@
 :- use_module(popong).
+:- encoding(utf8).
 
 % ----------------
 % Ejercicio 1
@@ -6,14 +7,12 @@
 
 % esMatriz(+ListaDeListas)
 esMatriz([]).
-esMatriz([X | Xs]) :- 
-  length(X , Longitud), 
-  todosMismaLongitud(Xs, Longitud).
+esMatriz(Xs) :- 
+  todosMismaLongitud(Xs).
 
-todosMismaLongitud([], _).
-todosMismaLongitud([X | Xs], Longitud) :- 
-  length(X, Longitud), 
-  todosMismaLongitud(Xs, Longitud).
+% todosMismaLongitud(+Xs)
+todosMismaLongitud([_|[]]).
+todosMismaLongitud([X1|[X2|XS]]) :- length(X1, L), length(X2, L), todosMismaLongitud([X2|XS]).
 
 % ----------------
 % Ejercicio 2
@@ -33,6 +32,11 @@ tamaño([X | Xs], Filas, Columnas) :-
 % coordenadaEnRango(+Matriz, +Coordenada)
 % Precondición: esMatriz(Matriz)
 coordenadaEnRango(M, (X,Y)) :- tamaño(M,F,C), between(1,F,X), between(1,C,Y).
+
+% Sí, es reversible en Coordenadas ya que tamaño instancia F y C con las filas y columnas de la matriz, y luego los between instancian todas las posibles X e Y, devolviendo todas las coordenadas de la matriz.
+% No es reversible en Matriz, ya que tamaño sin instanciar ningún argumento te devuelve todas las matrices de una sola fila. 
+% Esto sirve si hacés coordenadaEnRango(M, (1, Y)) ya que le estás preguntando por la primera fila, y te instancia todas las matrices de una fila (como tamaño), pero si instanciás la X por algo > 1 se queda trabado, ya que nunca genera matrices de más de una fila.
+% Tampoco es reversible en ambos argumentos ya que, de nuevo, solo te instancia todas las matrices de una sola fila con todas sus respectivas coordenadas.
 
 % ----------------
 % Observadores de tablero.
@@ -73,7 +77,16 @@ color(T, Color, Coordenada) :-
 
 % tableroConPosiciónLiberada(+Tablero, +Coordenada, -TableroLiberado)
 % Precondición: esMatriz(Tablero), coordenadaEnRango(Tablero, Coordenada), not(libre(Tablero, Coordenada)).
-tableroConPosiciónLiberada(_, _, _) :- completar("Ejercicio 4.a").
+tableroConPosiciónLiberada(Tablero, (X, Y), TableroLib):-
+  nth1(X, Tablero, FilaActual), 
+  modificar(FilaActual, Y, libre, FilaNueva),
+  modificar(Tablero, X, FilaNueva, TableroLib).
+
+% modificar(+L, +Indice, +Valor, -Lm)
+modificar([_ | Ls], 1, Valor, [Valor | Ls]).
+modificar([L | Ls], Indice, Valor, [L | Lm]) :-
+  J is Indice - 1,
+  modificar(Ls, J, Valor, Lm).
 
 % ----------------
 % Ejercicio 4.b)
@@ -82,7 +95,10 @@ tableroConPosiciónLiberada(_, _, _) :- completar("Ejercicio 4.a").
 % tableroConPosicionesLiberadas(+Tablero, +Posiciones, -TableroLiberado)
 % Precondición: esMatriz(Tablero).
 % Precondición: para cada Coordenada en Posiciones: coordenadaEnRango(Tablero, Coordenada), not(libre(Tablero, Coordenada)).
-tableroConPosicionesLiberadas(_, _, _) :- completar("Ejercicio 4.b").
+tableroConPosicionesLiberadas(T, [], T).
+tableroConPosicionesLiberadas(T1, [C | Cs], T3) :- 
+  tableroConPosiciónLiberada(T1, C, T2), 
+  tableroConPosicionesLiberadas(T2, Cs, T3).
 
 % ----------------
 % Operaciones sobre coordenadas.
@@ -219,7 +235,7 @@ jugadaPosible(T, (I, J)) :-
 
 % jugarPosición(+TableroInicial, +Coordenada, -TableroResultante)
 % Precondición: esMatriz(TableroInicial), coordenadaEnRango(TableroInicial, Coordenada), libre(TableroInicial, Coordenada).
-jugarPosición(_, _, _) :- completar("Ejercicio 5.a").
+jugarPosición(T, C, T2) :- jugadaPosible(T, C), coloresPredominantes(T, C, _, CS), tableroConPosicionesLiberadas(T, CS, T2).
 
 % ----------------
 % Ejercicio 5.b)
@@ -228,7 +244,8 @@ jugarPosición(_, _, _) :- completar("Ejercicio 5.a").
 % jugarPosiciones(+TableroInicial, +Jugadas, -TableroResultante)
 % Precondición: esMatriz(TableroInicial).
 % Precondición: para cada Coordenada en Jugadas: coordenadaEnRango(TableroInicial, Coordenada).
-jugarPosiciones(_, _, _) :- completar("Ejercicio 5.b").
+jugarPosiciones(T, [], T).
+jugarPosiciones(T1, [C|CS], T3) :- jugarPosición(T1, C, T2), jugarPosiciones(T2, CS, T3).
 
 % jugarNaive(+TableroInicial, -TableroFinal)
 % Precondición: esMatriz(TableroInicial).
@@ -245,7 +262,8 @@ jugarNaive(T, TF) :-
 
 % jugadasNaive(+Tablero, -Jugadas)
 % Precondición: esMatriz(Tablero).
-jugadasNaive(_, _) :- completar("Ejercicio 6.b").
+jugadasNaive(T, []) :- not(jugadaPosible(T, _)).
+jugadasNaive(T, [C|CS]) :- jugadaPosible(T, C), jugarPosición(T, C, T2), jugadasNaive(T2, CS).
 
 % ----------------
 % Ejercicio 7.a)
@@ -254,7 +272,9 @@ jugadasNaive(_, _) :- completar("Ejercicio 6.b").
 % victoriaConJugadas(+Tablero, +Jugadas).
 % Precondición: esMatriz(Tablero).
 % Precondición: para cada Coordenada en Jugadas: coordenadaEnRango(Tablero, Coordenada).
-victoriaConJugadas(_, _) :- completar("Ejercicio 7.a").
+victoriaConJugadas(Tablero, Jugadas) :- 
+  jugarPosiciones(Tablero, Jugadas, Final),
+  not((coordenada(Final, C), color(Final, _, C))).
 
 % ----------------
 % Ejercicio 7.b)
@@ -262,7 +282,7 @@ victoriaConJugadas(_, _) :- completar("Ejercicio 7.a").
 
 % juegoNaiveVictorioso(+Tablero, -Jugadas)
 % Precondición: esMatriz(Tablero).
-juegoNaiveVictorioso(_, _) :- completar("Ejercicio 7.b").
+juegoNaiveVictorioso(T, J) :- jugadasNaive(T, J), victoriaConJugadas(T, J).
 
 % ----------------
 % Ejercicio 7.c)
@@ -270,7 +290,8 @@ juegoNaiveVictorioso(_, _) :- completar("Ejercicio 7.b").
 
 % mejorJuegoNaive(+Tablero, -Jugadas)
 % Precondición: esMatriz(Tablero).
-mejorJuegoNaive(_, _) :- completar("Ejercicio 7.c").
+mejorJuegoNaive(T, J) :- juegoNaiveVictorioso(T, J), 
+  not((juegoNaiveVictorioso(T, J2), J2 \= J, length(J2, L2), length(J, L), L2 < L)).
 
 % ----------------
 % Ejercicio 8 - OPCIONAL
