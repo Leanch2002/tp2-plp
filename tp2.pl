@@ -33,6 +33,11 @@ tamaño([X | Xs], Filas, Columnas) :-
 % Precondición: esMatriz(Matriz)
 coordenadaEnRango(M, (X,Y)) :- tamaño(M,F,C), between(1,F,X), between(1,C,Y).
 
+% Sí, es reversible en Coordenadas ya que tamaño instancia F y C con las filas y columnas de la matriz, y luego los between instancian todas las posibles X e Y, devolviendo todas las coordenadas de la matriz.
+% No es reversible en Matriz, ya que tamaño sin instanciar ningún argumento te devuelve todas las matrices de una sola fila. 
+% Esto sirve si hacés coordenadaEnRango(M, (1, Y)) ya que le estás preguntando por la primera fila, y te instancia todas las matrices de una fila (como tamaño), pero si instanciás la X por algo > 1 se queda trabado, ya que nunca genera matrices de más de una fila.
+% Tampoco es reversible en ambos argumentos ya que, de nuevo, solo te instancia todas las matrices de una sola fila con todas sus respectivas coordenadas.
+
 % ----------------
 % Observadores de tablero.
 % ----------------
