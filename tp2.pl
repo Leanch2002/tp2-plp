@@ -12,7 +12,10 @@ esMatriz(Xs) :-
 
 % todosMismaLongitud(+Xs)
 todosMismaLongitud([_|[]]).
-todosMismaLongitud([X1|[X2|XS]]) :- length(X1, L), length(X2, L), todosMismaLongitud([X2|XS]).
+todosMismaLongitud([X1|[X2|XS]]) :- 
+  length(X1, L), 
+  length(X2, L), 
+  todosMismaLongitud([X2|XS]).
 
 % ----------------
 % Ejercicio 2
@@ -31,7 +34,10 @@ tamaño([X | Xs], Filas, Columnas) :-
 
 % coordenadaEnRango(+Matriz, +Coordenada)
 % Precondición: esMatriz(Matriz)
-coordenadaEnRango(M, (X,Y)) :- tamaño(M,F,C), between(1,F,X), between(1,C,Y).
+coordenadaEnRango(M, (X,Y)) :- 
+  tamaño(M,F,C), 
+  between(1,F,X), 
+  between(1,C,Y).
 
 % Sí, es reversible en Coordenadas ya que tamaño instancia F y C con las filas y columnas de la matriz, y luego los between instancian todas las posibles X e Y, devolviendo todas las coordenadas de la matriz.
 % No es reversible en Matriz, ya que tamaño sin instanciar ningún argumento te devuelve todas las matrices de una sola fila. 
@@ -235,7 +241,10 @@ jugadaPosible(T, (I, J)) :-
 
 % jugarPosición(+TableroInicial, +Coordenada, -TableroResultante)
 % Precondición: esMatriz(TableroInicial), coordenadaEnRango(TableroInicial, Coordenada), libre(TableroInicial, Coordenada).
-jugarPosición(T, C, T2) :- jugadaPosible(T, C), coloresPredominantes(T, C, _, CS), tableroConPosicionesLiberadas(T, CS, T2).
+jugarPosición(T, C, T2) :- 
+  jugadaPosible(T, C), 
+  coloresPredominantes(T, C, _, CS), 
+  tableroConPosicionesLiberadas(T, CS, T2).
 
 % ----------------
 % Ejercicio 5.b)
@@ -245,7 +254,9 @@ jugarPosición(T, C, T2) :- jugadaPosible(T, C), coloresPredominantes(T, C, _, C
 % Precondición: esMatriz(TableroInicial).
 % Precondición: para cada Coordenada en Jugadas: coordenadaEnRango(TableroInicial, Coordenada).
 jugarPosiciones(T, [], T).
-jugarPosiciones(T1, [C|CS], T3) :- jugarPosición(T1, C, T2), jugarPosiciones(T2, CS, T3).
+jugarPosiciones(T1, [C|CS], T3) :- 
+  jugarPosición(T1, C, T2), 
+  jugarPosiciones(T2, CS, T3).
 
 % jugarNaive(+TableroInicial, -TableroFinal)
 % Precondición: esMatriz(TableroInicial).
@@ -262,8 +273,12 @@ jugarNaive(T, TF) :-
 
 % jugadasNaive(+Tablero, -Jugadas)
 % Precondición: esMatriz(Tablero).
-jugadasNaive(T, []) :- not(jugadaPosible(T, _)).
-jugadasNaive(T, [C|CS]) :- jugadaPosible(T, C), jugarPosición(T, C, T2), jugadasNaive(T2, CS).
+jugadasNaive(T, []) :- 
+  not(jugadaPosible(T, _)).
+jugadasNaive(T, [C|CS]) :- 
+  jugadaPosible(T, C), 
+  jugarPosición(T, C, T2), 
+  jugadasNaive(T2, CS).
 
 % ----------------
 % Ejercicio 7.a)
@@ -282,7 +297,9 @@ victoriaConJugadas(Tablero, Jugadas) :-
 
 % juegoNaiveVictorioso(+Tablero, -Jugadas)
 % Precondición: esMatriz(Tablero).
-juegoNaiveVictorioso(T, J) :- jugadasNaive(T, J), victoriaConJugadas(T, J).
+juegoNaiveVictorioso(T, J) :- 
+  jugadasNaive(T, J), 
+  victoriaConJugadas(T, J).
 
 % ----------------
 % Ejercicio 7.c)
@@ -290,8 +307,12 @@ juegoNaiveVictorioso(T, J) :- jugadasNaive(T, J), victoriaConJugadas(T, J).
 
 % mejorJuegoNaive(+Tablero, -Jugadas)
 % Precondición: esMatriz(Tablero).
-mejorJuegoNaive(T, J) :- juegoNaiveVictorioso(T, J), 
-  not((juegoNaiveVictorioso(T, J2), J2 \= J, length(J2, L2), length(J, L), L2 < L)).
+mejorJuegoNaive(T, J) :- 
+  juegoNaiveVictorioso(T, J), 
+  not((juegoNaiveVictorioso(T, J2), 
+  J2 \= J, 
+  length(J2, L2), 
+  length(J, L), L2 < L)).
 
 % ----------------
 % Ejercicio 8 - OPCIONAL
